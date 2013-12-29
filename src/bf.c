@@ -2,7 +2,9 @@
 #include <stdio.h>
 #include <bf.h>
 
-char data[0x8000]; // I think 32 KiB is enough for most BF programs...
+#define MAX_DATA 0x8000 // I think 32 KiB is enough for most BF programs...
+
+char data[MAX_DATA];
 
 void bf_interp(char *file, size_t len)
 {
@@ -15,11 +17,13 @@ void bf_interp(char *file, size_t len)
 	{
 		switch(file[i])
 		{
-			case '>':	ptr_pos++;
+			case '>':	if(ptr_pos >= (MAX_DATA - 1)) ptr_pos = 0;
+						else                          ptr_pos++;
 						i++;
 						continue;
 
-			case '<':	ptr_pos--;
+			case '<':	if(ptr_pos == 0) ptr_pos = MAX_DATA - 1;
+						else             ptr_pos--;
 						i++;
 						continue;
 
