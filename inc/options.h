@@ -7,9 +7,10 @@ typedef struct
         char *setting;
 } option;
 
-option options[1];
+option options[2];
 
 #define OPT_INPUT_FILE 0
+#define OPT_JUMPFUCK   1
 
 void get_options(int, char **);
 

@@ -1,20 +1,30 @@
 #include <options.h>
+#include <stdlib.h>
 #include <stdio.h>
 #include <bf.h>
 
-#define MAX_DATA 0x8000 // I think 32 KiB is enough for most BF programs...
+#define MAX_DATA 0x8000
+#define MAX_JUMP 0x1000
 
-char data[MAX_DATA];
+unsigned long *data; // Exact size in bits in platform-dependant
+size_t        *jump; // Used for JumpFuck
 
 void bf_interp(char *file, size_t len)
 {
 	int ptr_pos;
 	int tmp;
 	size_t tmp_pos;
+	int jumped;
+
+	int jf = ((size_t)options[OPT_JUMPFUCK].setting) == 1;
+
+	data = (unsigned long *)malloc(MAX_DATA * sizeof(unsigned long *));
+	if(jf) jump = (size_t *)malloc(MAX_JUMP * sizeof(size_t *));
 
 	size_t i = 0;
 	while(i < len)
 	{
+		if(jumped) jumped--;
 		switch(file[i])
 		{
 			case '>':	if(ptr_pos >= (MAX_DATA - 1)) ptr_pos = 0;
@@ -77,6 +87,19 @@ void bf_interp(char *file, size_t len)
 							tmp_pos--;
 						}
 						i = tmp_pos;
+						continue;
+
+
+			case '&':	if(!jf) { i++; continue; }
+						if(jumped) data[ptr_pos] = data[(ptr_pos + 1) % MAX_DATA];
+						else       data[ptr_pos] = 0;
+						jump[data[ptr_pos]] = i;
+						i++;
+						continue;
+
+			case '%':	if(!jf) { i++; continue; }
+						jumped = 2;
+						i = jump[data[ptr_pos]];
 						continue;
 
 			default:	i++;

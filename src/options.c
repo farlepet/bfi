@@ -3,9 +3,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-option options[1] = 
+option options[2] = 
 {
 	{"-i", (char *)1},   // Input file
+	{"-j", (char *)0},   // Enable JumpFuck
 };
 #define N_OPTS (int)(sizeof(options) / sizeof(options[0]))
 
