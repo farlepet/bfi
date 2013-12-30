@@ -66,6 +66,7 @@ void bf_interp(char *file, size_t len)
 									printf("No ending ']' after '[' at character %zu\n", i);
 									return;
 								}
+								if(file[tmp_pos] == '@') if(ebf) { i++; continue; }
 								if(file[tmp_pos] == '[') tmp++;
 								if(file[tmp_pos] == ']') tmp--;
 								tmp_pos++;
