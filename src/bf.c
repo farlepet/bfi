@@ -1,5 +1,6 @@
 #include <options.h>
 #include <stdlib.h>
+#include <string.h>
 #include <stdio.h>
 #include <bf.h>
 
@@ -20,8 +21,9 @@ void bf_interp(char *file, size_t len)
 	int jf   = ((size_t)options[OPT_JUMPFUCK].setting)   == 1;
 	int ebf  = ((size_t)options[OPT_EXTBRAINI].setting)  == 1;
 
-	data = (unsigned char *)malloc(MAX_DATA * sizeof(unsigned char));
+	data = (unsigned char *)malloc(MAX_DATA);
 	if(jf) jump = (size_t *)malloc(MAX_JUMP * sizeof(size_t));
+	memset(data, 0, MAX_DATA);
 
 	size_t i = 0;
 	while(i < len)
